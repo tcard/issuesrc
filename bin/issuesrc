@@ -1,0 +1,81 @@
+#!/usr/bin/env ruby
+
+require 'issuesrc'
+require 'optparse'
+require 'toml'
+
+options = {}
+opts_parser = OptionParser.new do |opts|
+  opts.banner = 'Usage: issuesrc [options] [<config file>]'
+
+  opts.on('-v', 'Verbose mode; prints files and changes.') do |v|
+    options[:verbose] = true
+  end
+
+  opts.on('--repo <user>/<repo>', 'GitHub repository; may be used for code ' +
+    'and issues. Can be specified also from the config file, as the "repo" ' +
+    'entry in the "[github]" section.') do |v|
+    options[:repo] = v
+  end
+
+  opts.on('--repo-url URL', 'URL of the repository, used for code. Can be ' +
+    'specified also from the config file, as the "repo" entry in the ' +
+    '"[git]" section.') do |v|
+    options[:repo_url] = v
+  end
+
+  opts.on('--repo-path URL', 'File path of the repository folder, used for ' +
+    'code. Can be specified also from the config file, as the "repo_path" ' +
+    'entry in the "[git]" section.') do |v|
+    options[:repo_path] = v
+  end
+
+  opts.on('--github-token TOKEN', 'A GitHub OAuth token; depending on the ' +
+    'rest of the configuration, may be used to retrieve files from a ' +
+    'GitHub repo and/or manage GitHub issues. Can be specified also ' +
+    'from the config file, as the "auth_token" entry in the "[github]" ' +
+    'section.') do |v|
+    options[:github_token] = v
+  end
+
+  opts.on('--issuesrc-label LABEL', 'The label that will be used to keep ' +
+    'track of the issues. Can be specified also from the config file, as ' +
+    'the "issuesrc_label" entry in the "[issuer]" section.') do |v|
+    options[:issuesrc_label] = v
+  end
+
+  sourcer_values = Issuesrc::SOURCERS.keys.map do |x| x.inspect end.join(',')
+  opts.on('--sourcer SOURCER', "Valid values: #{sourcer_values}. " +
+    'Can be specified also from the config file, as the ' +
+    '"sourcer" entry in the "[sourcer]" section.') do |v|
+    options[:sourcer] = v
+  end
+
+  issuer_values = Issuesrc::ISSUERS.keys.map do |x| x.inspect end.join(',')
+  opts.on('--issuer ISSUER', "Valid values: #{issuer_values}. " +
+    'Can be specified also from the config file, as the ' +
+    '"issuer" entry in the "[issuer]" section.') do |v|
+    options[:issuer] = v
+  end
+end
+
+begin
+  opts_parser.parse!
+rescue Exception => e
+  STDERR.puts "error: #{e}"
+  exit 1
+end
+
+if ARGV.length > 1
+  puts opts_parser.help()
+  exit 1
+end
+
+config = ARGV.length == 1 ? TOML::Parser.new(File.read(ARGV[0])).parsed : {}
+
+begin
+  Issuesrc.run(options, config)
+rescue Issuesrc::IssuesrcError => e
+  STDERR.puts "error: #{e}"
+  exit 1
+end

@@ -1,0 +1,48 @@
+# This is an example configuration file for issuesrc.
+
+# The issuer loads, creates, updates and deletes issues from an external issue
+# tracking service.
+[issuer]
+
+# By default "github"; only supported value for now.
+# Can be also passed as --issuer from the command line.
+issuer = "github"
+
+# By default. The label, tag, category, or similar that will be used in the
+# issue tracker to mark issues created by issuesrc.
+# Can also be passed as --issuesrc-label from the command line.
+issuesrc_label = "issuesrc"
+
+# The sourcer handles source code files: retrieves, reads and writes them.
+[sourcer]
+# By default; the other supported sourcer is "git".
+# Can also be passed as --sourcer from the command line.
+sourcer = "github"  
+				
+# Files matching those globs will be ignored.	
+exclude_files = [
+	".*.min.js",
+	"doc/*"
+]
+
+[git]
+# When specified, and the sourcer is "github" but no repo is specified under
+# the [github] section, it will be used as the folder where the source files
+# lie. It must be a valid git repository.
+# Can also be passed as --repo-path from the command line.
+repo_path = "/path/to/your/repo"
+
+# URL where your repo can be downloaded from via HTTP. repo_path takes
+# precedence.
+# Can also be passed as --repo-url from the command line.
+repo = "http://git.somewhere.com/yourrepo"
+
+
+[github]
+# Used by both the github issuer and sourcer.
+repo = "youruser/somerepo"
+
+# The OAuth 2 token from GitHub.
+# https://help.github.com/articles/creating-an-access-token-for-command-line-use/
+# Can also be passed as --github-token from the command line.
+auth_token = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
