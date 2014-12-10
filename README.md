@@ -1,4 +1,4 @@
-# issuesrc [![Build Status](https://secure.travis-ci.org/tcard/issuesrc.svg?branch=master)](http://travis-ci.org/tcard/issuesrc)
+# issuesrc [![Build Status](https://secure.travis-ci.org/tcard/issuesrc.svg?branch=master)](http://travis-ci.org/tcard/issuesrc) [![Gem Version](https://badge.fury.io/rb/issuesrc.svg)](http://badge.fury.io/rb/issuesrc) [![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](http://www.rubydoc.info/github/tcard/issuesrc/master)
 
 **WARNING: very early stage of development. Test at your own risk!**
 
