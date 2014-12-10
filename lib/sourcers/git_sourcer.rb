@@ -9,47 +9,32 @@ module Issuesrc
   module Sourcers
     class GitSourcer
       def initialize(args, config)
-        @url = nil
-        @path = nil
-        @branch = nil
-
-        url = try_find_repo_url(args, config)
-        if !url.nil?
-          initialize_with_url(url, args, config)
-          return
+        if @url.nil?
+          @url = try_find_repo_url(args, config)
         end
 
-        path = try_find_repo_path(args, config)
-        if !path.nil?
-          initialize_with_path(path, args, config)
-          return
+        if @url.nil?
+          @path = try_find_repo_path(args, config)
         end
 
-        init_exclude(config)
+        init(args, config)
       end
 
       def initialize_with_url(url, args, config)
         @url = url
-        init_exclude(config)
+        init(args, config)
       end
 
       def initialize_with_path(path, args, config)
         @path = path
-        init_exclude(config)
-      end
-
-      def init_exclude(config)
-        @exclude = Issuesrc::Config::option_from_config(
-          ['sourcer', 'exclude_files'], config)
-        if @exclude.nil?
-          @exclude = []
-        end
+        init(args, config)
       end
 
       def retrieve_files()
         dir = nil
         if !@url.nil?
           tmp_dir = Dir::mktmpdir
+          @tmp_dir = tmp_dir
           dir = clone_repo(tmp_dir)
           @path = dir
         else
@@ -59,9 +44,6 @@ module Issuesrc
         Enumerator.new do |enum|
           find_all_files(dir) do |file|
             enum << file
-          end
-          if !@url.nil?
-            FileUtils.remove_entry_secure tmp_dir
           end
         end
       end
@@ -73,37 +55,65 @@ module Issuesrc
 
         msg = make_commit_message(created_tags, updated_tags, closed_issues)
         $stderr.puts msg
-        # make_commit(msg)
-      end
 
-      def make_commit(msg)
-        prev_dir = Dir::pwd
-        Open3.popen3("git commit -a --file -") do |fin, fout, ferr, proc|
-          fin.write(msg + "\n")
-          fin.close
-          out = fout.read 
-          err = ferr.read
-          status = proc.value
-          fout.close
-          ferr.close
-          if status.to_i != 0
-            Dir::chdir(prev_dir)
-            raise err
-          end
+        if @commit_when_done
+          make_commit(msg)
         end
-        Dir::chdir(prev_dir)
+        
+        if @push_when_done
+          push_repo()
+        end
+
+        if @tmp_dir
+          FileUtils.remove_entry_secure @tmp_dir
+        end
       end
 
       private
+      def init(args, config)
+        init_exclude(config)
+        @commit_when_done = decide_commit_when_done(args, config)
+        @push_when_done = decide_push_when_done(args, config)
+      end
+
+      def init_exclude(config)
+        @exclude = Issuesrc::Config::option_from_config(
+          ['sourcer', 'exclude_files'], config)
+        if @exclude.nil?
+          @exclude = []
+        end
+      end
+
+
       def try_find_repo_url(args, config)
         Issuesrc::Config::option_from_both(:repo_url, ['git', 'repo'],
                                            args, config)
       end
 
-      private
       def try_find_repo_path(args, config)
         Issuesrc::Config::option_from_both(:repo_path, ['git', 'repo_path'],
                                            args, config)
+      end
+
+      def decide_commit_when_done(args, config)
+        decide_when_done(:commit_when_done, 'commit_when_done', args, config)
+      end
+
+      def decide_push_when_done(args, config)
+        decide_when_done(:push_when_done, 'push_when_done', args, config)
+      end
+
+      def decide_when_done(args_key, config_key, args, config)
+        opt = Issuesrc::Config::option_from_both(
+          args_key, ['git', config_key], args, config)
+        if opt.nil?
+          opt = is_downloaded?
+        end
+        opt
+      end
+
+      def is_downloaded?
+        !@url.nil?
       end
 
       def clone_repo(dir)
@@ -191,6 +201,37 @@ module Issuesrc
         end
         s << parts.join("\n")
         s
+      end
+
+      def make_commit(msg)
+        prev_dir = Dir::pwd
+        Dir::chdir(@path)
+        Open3.popen3("git commit -a --file -") do |fin, fout, ferr, proc|
+          fin.write(msg + "\n")
+          fin.close
+          out = fout.read 
+          err = ferr.read
+          status = proc.value
+          fout.close
+          ferr.close
+          if status.to_i != 0
+            Dir::chdir(prev_dir)
+            puts "error committing: #{out} #{err}"
+            next
+          end
+        end
+        Dir::chdir(prev_dir)
+      end
+
+      def push_repo
+        prev_dir = Dir::pwd
+        Dir::chdir(@path)
+        out, err, status = Open3.capture3 "git push"
+        if status != 0
+          Dir::chdir(prev_dir)
+          raise err
+        end
+        Dir::chdir(prev_dir)
       end
     end
   end

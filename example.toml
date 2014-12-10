@@ -37,6 +37,14 @@ repo_path = "/path/to/your/repo"
 # Can also be passed as --repo-url from the command line.
 repo = "http://git.somewhere.com/yourrepo"
 
+# If the repo has been downloaded (ie. sourcer is "git" and repo is specified
+# but not repo_path; or sourcer is "github"), those two will default to true.
+# Otherwise, they will default to false.
+# Can also be passed ass --commit-when-done and --push-when-done from the 
+# command line.
+# commit_when_done = false
+# push_when_done = false
+
 
 [github]
 # Used by both the github issuer and sourcer.

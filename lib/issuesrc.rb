@@ -30,8 +30,8 @@ module Issuesrc
   def self.run(args, config)
     program = Class.new { include Issuesrc }.new
     program.set_config(args, config)
+    program.init_files_offsets()
 
-    @files_offsets = {}
     event_loop = Issuesrc::SequentialEventLoop.new()
     sourcer = program.load_sourcer()
     tag_finders = program.load_tag_finders()
@@ -85,6 +85,10 @@ module Issuesrc
   def set_config(args, config)
     @args = args
     @config = config
+  end
+
+  def init_files_offsets
+    @files_offsets = {}
   end
 
   # Creates the instance of the sourcer that should be used for the current

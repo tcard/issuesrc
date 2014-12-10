@@ -57,6 +57,18 @@ opts_parser = OptionParser.new do |opts|
     '"issuer" entry in the "[issuer]" section.') do |v|
     options[:issuer] = v
   end
+
+  opts.on('--commit-when-done', 'Make a commit when the program finishes.' +
+    'Can be specified also from the config file, as the "commit_when_done" ' +
+    'entry in the "[git]" section.') do |v|
+    options[:commit_when_done] = true
+  end
+
+  opts.on('--push-when-done', 'Push to remote when the program finishes.' +
+    'Can be specified also from the config file, as the "push_when_done" ' +
+    'entry in the "[git]" section.') do |v|
+    options[:push_when_done] = true
+  end
 end
 
 begin
