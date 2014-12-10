@@ -40,6 +40,7 @@ module Issuesrc
     issues = issuer.async_load_issues()
 
     created_tags, updated_tags, closed_issues = [], [], []
+    tags_by_issue_id = {}
 
     sourcer.retrieve_files().each do |file|
       if Issuesrc::Config::option_from_args(:verbose, args)
@@ -54,7 +55,8 @@ module Issuesrc
       tags = []
       tag_finder.find_tags(file) { |tag| tags << tag }
 
-      tags_by_issue_id, new_tags = program.classify_tags(tags, file)
+      tags_in_file, new_tags = program.classify_tags(tags, file)
+      tags_by_issue_id.update(tags_in_file)
 
       new_tags.each do |tag|
         created_tags << tag
@@ -62,16 +64,18 @@ module Issuesrc
           program.save_tag_in_file(tag)
         end
       end
+    end
 
-      issuer.async_update_or_close_issues(issues, tags_by_issue_id) do
-      |issue_id, tag, action|
-        case action
-        when :updated
-          program.save_tag_in_file(tag)
-          updated_tags << tag
-        when :closed
-          closed_issues << issue_id
-        end
+    # TODO(tcard): Test.
+
+    issuer.async_update_or_close_issues(issues, tags_by_issue_id) do
+    |issue_id, tag, action|
+      case action
+      when :updated
+        program.save_tag_in_file(tag)
+        updated_tags << tag
+      when :closed
+        closed_issues << issue_id
       end
     end
 
