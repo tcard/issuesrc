@@ -20,7 +20,7 @@ issuesrc scans your files looking for comments tagged with labels such as TODO, 
 
 issuesrc connects comments found in source code with an issue tracker. It needs to be configured to talk to both.
 
-Configuration is done both via a .toml config file and via command line arguments. See `example.toml` and run `issuesrc -h` for details.
+Configuration is done both via a .toml config file and via command line arguments. See [`example.toml`](https://github.com/tcard/issuesrc/blob/master/example.toml) and run `issuesrc -h` for details.
 
 Currently, issuesrc only supports Git for retrieving source code, and GitHub as issue tracker.
 
