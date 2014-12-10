@@ -1,3 +1,4 @@
+require_relative '../spec_helper'
 require_relative '../../lib/issuesrc/tag_extractor'
 
 describe Issuesrc::TagExtractor do
