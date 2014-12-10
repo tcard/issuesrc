@@ -36,7 +36,7 @@ module Issuesrc
     def replace_at(pos, old_content_length, new_content)
       fbody = body.read
       fbody = replace_in_string(fbody, pos, old_content_length, new_content)
-      f = File.open(@path, 'wb')
+      f = body_for_writing()
       f.write(fbody)
       f.close()
     end
@@ -44,6 +44,10 @@ module Issuesrc
     private
     def replace_in_string(s, pos, deleted_length, new_content)
       (s[0...pos] || '') + new_content + (s[pos + deleted_length..-1] || '')
+    end
+
+    def body_for_writing
+      File.open(@path, 'wb')
     end
   end
 

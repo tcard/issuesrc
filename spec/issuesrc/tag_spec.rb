@@ -15,14 +15,16 @@ describe Issuesrc::Tag do
       300)
   end
 
-  it 'writes itself in its file with offsets' do
-    offset = [[50, 10], [60, 15], [999, 999]]
+  describe '#write_in_file' do
+    it 'writes itself in its file with offsets' do
+      offset = [[50, 10], [60, 15], [999, 999]]
 
-    allow(@file).to receive(:replace_at)
-      .with(222 + 10 + 15, 300 - 222, @obj.to_s)
-    old_length = 300 - 222
-    new_length = @obj.to_s.length
-    expect(@obj.write_in_file(offset.clone))
-      .to be == (offset + [[222, new_length - old_length]])
+      allow(@file).to receive(:replace_at)
+        .with(222 + 10 + 15, 300 - 222, @obj.to_s)
+      old_length = 300 - 222
+      new_length = @obj.to_s.length
+      expect(@obj.write_in_file(offset.clone))
+        .to be == (offset + [[222, new_length - old_length]])
+    end
   end
 end
