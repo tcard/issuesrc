@@ -51,6 +51,7 @@ module Issuesrc
         if !@url.nil?
           tmp_dir = Dir::mktmpdir
           dir = clone_repo(tmp_dir)
+          @path = dir
         else
           dir = @path
         end

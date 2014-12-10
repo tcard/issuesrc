@@ -54,7 +54,7 @@ module Issuesrc
       tags = []
       tag_finder.find_tags(file) { |tag| tags << tag }
 
-      tags_by_issue_id, new_tags = classify_tags(tags, file)
+      tags_by_issue_id, new_tags = program.classify_tags(tags, file)
 
       new_tags.each do |tag|
         created_tags << tag
