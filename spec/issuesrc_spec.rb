@@ -77,5 +77,5 @@ describe Issuesrc do
     end
   end
 
-  # TODO: Complete testing.
+  # TODO(#27): Complete testing.
 end

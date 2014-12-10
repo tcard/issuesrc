@@ -110,7 +110,7 @@ module Issuesrc
       end
 
       def make_sure_issue_exists_and_then
-        # TODO
+        # TODO(#21)
         yield true
       end
 
@@ -136,7 +136,7 @@ module Issuesrc
       end
 
       def async_load_issues_pages(queue, from_page)
-        concurrent_pages = 1  # TODO: Configurable?
+        concurrent_pages = 1  # TODO(#22): Configurable?
 
         waiting_for = concurrent_pages
         end_reached = false
@@ -186,7 +186,7 @@ module Issuesrc
           params['assignee'] = tag.author
         end
         ghreq(method, url, params) do |req|
-          # TODO: Error handling.
+          # TODO(#23): Error handling.
           new_tag_data = JSON.parse(req.response)
           tag.issue_id = new_tag_data['number'].to_s
 
