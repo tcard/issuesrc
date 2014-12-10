@@ -21,14 +21,14 @@ Haskell has {- TODO comments like-} this.
 
 // This should match FIXME(tcard): until the end of the line.
 
-Also # TODO: like this.
-"Don't" be -- crazy TODO and # TODO mix them!
+Also # TODO(#38): like this.
+"Don't" be -- crazy TODO and # TODO(#39): mix them!
 
 EOD
     
     @cases = {
       'madeup' => [
-        # BUG: Shouldn't match end of block comments.
+        # BUG(#40): Shouldn't match end of block comments.
         [97, 107, 'BUG: code*/'],
         [240, 280, 'FIXME(tcard): until the end of the line.'],
       ],

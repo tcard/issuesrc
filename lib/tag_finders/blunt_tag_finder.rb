@@ -77,8 +77,7 @@ module Issuesrc
       end
 
       def get_file_body(file)
-        file.body.read.force_encoding('BINARY') # TODO(#26): Use less memory here.
-      end
+        file.body.read.force_encoding('BINARY') # TTODO(#26): Use less memory here.      end
 
       class CommentFinder
         def initialize(body, comment_markers, string_markers)
