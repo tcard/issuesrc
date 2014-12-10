@@ -1,4 +1,4 @@
-# issuesrc
+# issuesrc [![Build Status](https://secure.travis-ci.org/tcard/issuesrc.svg?branch=master)](http://travis-ci.org/tcard/issuesrc)
 
 **WARNING: very early stage of development. Test at your own risk!**
 
