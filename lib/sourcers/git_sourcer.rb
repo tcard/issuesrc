@@ -71,7 +71,8 @@ module Issuesrc
         end
 
         msg = make_commit_message(created_tags, updated_tags, closed_issues)
-        make_commit(msg)
+        $stderr.puts msg
+        # make_commit(msg)
       end
 
       def make_commit(msg)
