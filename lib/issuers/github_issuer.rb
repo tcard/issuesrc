@@ -1,4 +1,5 @@
 require 'issuesrc/config'
+require 'issuers/issuers'
 require 'em-http-request'
 require 'json'
 require 'set'
@@ -6,35 +7,6 @@ require 'set'
 module Issuesrc
   module Issuers
     DEFAULT_LABEL = 'issuesrc'
-
-    class Issues
-      def initialize(queue)
-        @queue = queue
-        @queue_done = false
-        @cache = []
-      end
-
-      def each
-        i = 0
-        while i < @cache.length
-          yield @cache[i]
-          i += 1
-        end
-
-        while !@queue_done
-          @queue.pop do |issue_page|
-            if issue_page == :end
-              @queue_done = true
-              next
-            end
-            issue_page.each do |issue|
-              yield issue unless issue.include? 'pull_request'
-            end
-          end
-        end
-      end
-
-    end
 
     class GithubIssuer
       def initialize(args, config, event_loop)
@@ -109,12 +81,12 @@ module Issuesrc
         end
       end
 
+      private
       def make_sure_issue_exists_and_then
         # TODO(#21)
         yield true
       end
 
-      private
       def find_repo(args, config)
         repo_arg = Issuesrc::Config.option_from_both(
           :repo, ['github', 'repo'], args, config, :require => true)

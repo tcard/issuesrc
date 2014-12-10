@@ -55,7 +55,7 @@ module Issuesrc
       tags = []
       tag_finder.find_tags(file) { |tag| tags << tag }
 
-      tags_in_file, new_tags = program.classify_tags(tags, file)
+      tags_in_file, new_tags = program.classify_tags(tags)
       tags_by_issue_id.update(tags_in_file)
 
       new_tags.each do |tag|
@@ -88,6 +88,8 @@ module Issuesrc
     @args = args
     @config = config
   end
+
+  attr_accessor :files_offsets
 
   def init_files_offsets
     @files_offsets = {}
@@ -186,7 +188,7 @@ module Issuesrc
     ret
   end
 
-  def classify_tags(tags, file)
+  def classify_tags(tags)
     tags_by_issue = {}
     new_tags = []
     tags.each do |tag|
