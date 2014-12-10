@@ -6,7 +6,7 @@ describe Issuesrc::TagFinders::BluntTagFinder do
     tag_extractor = Issuesrc::TagExtractor.new({}, {})
     @obj = Issuesrc::TagFinders::BluntTagFinder.new(tag_extractor, {}, {})
 
-    # BUG: Comments in @base_file are being parsed! We need a way of overriding this.
+    # BUG(#41): Comments in @base_file are being parsed! We need a way of overriding this.
     @base_file = <<EOD
 This is a file with several kind of comments supposed to be caught.
 
