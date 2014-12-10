@@ -2,7 +2,7 @@ module Issuesrc
   # This class is here for documentation only. All classes in the Sourcers
   # module that want to be considered issuers need to implement this
   # interface.
-  class File
+  class FileInterface
     # @return The type of the file as a file extension.
     def type; end
 

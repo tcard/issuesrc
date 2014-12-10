@@ -20,7 +20,7 @@ module Issuesrc
 
       # Tells if the tag finder can process the given file or not.
       #
-      # @param [Issuesrc::File] file
+      # @param [Issuesrc::FileInterface] file
       # @return [Bool]
       def accepts?(file); end
 
@@ -29,7 +29,7 @@ module Issuesrc
       # Reads in the file's body looking for tags, using the instance's
       # +tag_extractor+.
       #
-      # @param [Issuesrc::File] file
+      # @param [Issuesrc::FileInterface] file
       # @yieldparam tag [Issuesrc::Tag]
       def find_tags(file); end
     end

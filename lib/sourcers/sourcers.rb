@@ -19,7 +19,7 @@ module Issuesrc
 
       # Retrieves all the files in which there may be tags to find.
       #
-      # @return [Enumerator] Enumerator of {Issuesrc::File}.
+      # @return [Enumerator] Enumerator of {Issuesrc::FileInterface}.
       def retrieve_files; end
 
       # Optional. Called when the execution of the program finishes.

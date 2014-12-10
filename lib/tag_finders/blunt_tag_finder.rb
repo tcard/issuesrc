@@ -38,18 +38,13 @@ module Issuesrc
           # span several lines.
           nline_offset = 0
           comment.split("\n").each do |line|
-            tag_data = @tag_extractor.extract(line)
-            if !tag_data.nil?
-              yield Issuesrc::Tag.new(
-                tag_data['type'],
-                tag_data['issue_id'],
-                tag_data['author'],
-                tag_data['title'],
-                file,
-                nline + nline_offset,
-                pos + tag_data['begin_pos'],
-                pos + tag_data['end_pos']
-              )
+            tag = @tag_extractor.extract(line)
+            if !tag.nil?
+              tag.file = file
+              tag.line = nline + nline_offset
+              tag.begin_pos += pos
+              tag.end_pos += pos
+              yield tag
             end
             pos += line.length + 1
             nline_offset += 1

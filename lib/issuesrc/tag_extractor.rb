@@ -1,4 +1,5 @@
 require 'issuesrc/config'
+require 'issuesrc/tag'
 
 module Issuesrc
   TAG_EXTRACTORS = [
@@ -24,9 +25,17 @@ module Issuesrc
 
     def extract(source)
       @extractors.each do |extr|
-        tag = try_extractor(extr, source)
-        if !tag.nil?
-          return tag
+        tag_data = try_extractor(extr, source)
+        if !tag_data.nil?
+          return Issuesrc::Tag.new(
+            tag_data['type'],
+            tag_data['issue_id'],
+            tag_data['author'],
+            tag_data['title'],
+            nil, nil,
+            tag_data['begin_pos'],
+            tag_data['end_pos']
+          )
         end
       end
       nil

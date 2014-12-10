@@ -8,10 +8,10 @@ module Issuesrc
     attr_accessor :issue_id
     attr_reader :author
     attr_reader :title
-    attr_reader :file
-    attr_reader :line
-    attr_reader :begin_pos
-    attr_reader :end_pos
+    attr_accessor :file
+    attr_accessor :line
+    attr_accessor :begin_pos
+    attr_accessor :end_pos
 
     def initialize(label, issue_id, author, title, file, line, 
                    begin_pos, end_pos)
