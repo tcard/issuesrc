@@ -38,15 +38,15 @@ EOD
         [152, 169, 'BUG: Another one.'],
       ],
       'sql' => [
-        [326, 351, 'TODO: and # TODO mix them!'],
+        [331, 362, 'TODO: and # TODO(#39): mix them!'],
       ],
       'sh' => [
-        [289, 305, 'TODO: like this.'],
-        [337, 351, 'TODO: mix them!'],
+        [289, 310, 'TODO(#38): like this.'],
+        [342, 362, 'TODO(#39): mix them!'],
       ],
       'hs' => [
         [190, 210, 'TODO: comments like-}'],
-        [326, 351, 'TODO: and # TODO mix them!'],
+        [331, 362, 'TODO: and # TODO(#39): mix them!'],
       ],
     }
   end
