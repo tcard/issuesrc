@@ -65,6 +65,11 @@ module Issuesrc
       end
     end
 
+    # A generator of issues.
+    #
+    # Reads issues from the queue passed to the constructor and yields them.
+    # 
+    # The format of each issue is specific to a particular issuer.
     class Issues
       def initialize(queue)
         @queue = queue

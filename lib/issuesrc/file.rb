@@ -1,4 +1,25 @@
 module Issuesrc
+  # This class is here for documentation only. All classes in the Sourcers
+  # module that want to be considered issuers need to implement this
+  # interface.
+  class File
+    # @return The type of the file as a file extension.
+    def type; end
+
+    # @return [IO] The body of the file.
+    def body; end
+
+    # Replaces part of the body of the file, and saves it.
+    #
+    # @param pos Position from the beginning of the body in which the new
+    #        content starts.
+    # @param old_content_length Length of previous content that should be
+    #        replaced.
+    # @param new_content A string that will be written in +pos+ at the file.
+    def replace_at(pos, old_content_length, new_content); end
+  end
+
+  # A file from the filesystem.
   class FSFile
     attr_reader :type
     attr_reader :path
@@ -26,6 +47,7 @@ module Issuesrc
     end
   end
 
+  # A file from the filesystem that is indexed in a Git repository.
   class GitFile < FSFile
     attr_reader :repo
     attr_reader :path_in_repo
