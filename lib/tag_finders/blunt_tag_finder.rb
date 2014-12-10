@@ -2,6 +2,11 @@ require 'issuesrc/tag'
 
 module Issuesrc
   module TagFinders
+
+    # A tag finder that doesn't do any parsing; it just bluntly traverses the
+    # source code looking for things that look like comments.
+    #
+    # It tries to skip comments inside strings.
     class BluntTagFinder
       DEFAULT_COMMENT_MARKERS = [['//', "\n"], ['/*', '*/']]
       DEFAULT_STRING_MARKERS = ['"', "'"]
@@ -55,7 +60,7 @@ module Issuesrc
       private
       def find_comments(file)
         comment_markers, string_markers = decide_markers(file)
-        body = file.body.read.force_encoding('BINARY') # TODO(#26): Use less memory here.
+        body = get_file_body(file)
         comment_finder = CommentFinder.new(body, comment_markers, string_markers)
         pos = 0
 
@@ -69,6 +74,10 @@ module Issuesrc
           COMMENTS_BY_LANG.fetch(file.type, DEFAULT_COMMENT_MARKERS),
           STRINGS_BY_LANG.fetch(file.type, DEFAULT_STRING_MARKERS),
         ]
+      end
+
+      def get_file_body(file)
+        file.body.read.force_encoding('BINARY') # TODO(#26): Use less memory here.
       end
 
       class CommentFinder
@@ -124,15 +133,15 @@ module Issuesrc
         end
 
         def read_delimited(markers)
-          consumed = state_boundary(markers, :begin)
+          marker_i, consumed = state_boundary(markers, :begin)
           lex = @body[0...consumed]
           consume_body(consumed)
 
-          consumed_end = state_boundary(markers, :end)
+          _, consumed_end = state_boundary(markers, :end, marker_i)
           while !@body.empty? && consumed_end.nil?
             lex << @body[0]
             consumed += consume_body(1)
-            consumed_end = state_boundary(markers, :end)
+            _, consumed_end = state_boundary(markers, :end, marker_i)
           end
 
           if !consumed_end.nil?
@@ -153,18 +162,24 @@ module Issuesrc
           end
         end
 
-        def state_boundary(markers, begin_or_end)
+        def state_boundary(markers, begin_or_end, marker_i=nil)
           if @body.nil?
             nil
           end
 
+          i = 0
           markers.each do |marker|
+            if !marker_i.nil? && i != marker_i
+              i += 1
+              next
+            end
             if marker.instance_of? Array 
               marker = marker[begin_or_end == :begin ? 0 : 1]
             end
             if @body.start_with? marker
-              return marker.length
+              return [i, marker.length]
             end
+            i += 1
           end
           nil
         end
