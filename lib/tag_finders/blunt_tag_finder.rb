@@ -60,7 +60,7 @@ module Issuesrc
       private
       def find_comments(file)
         comment_markers, string_markers = decide_markers(file)
-        body = file.body.read.force_encoding('BINARY') # TODO: Use less memory here.
+        body = file.body.read.force_encoding('BINARY') # TODO(#26): Use less memory here.
         comment_finder = CommentFinder.new(body, comment_markers, string_markers)
         pos = 0
 

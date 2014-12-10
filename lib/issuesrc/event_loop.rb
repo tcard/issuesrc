@@ -27,7 +27,7 @@ module Issuesrc
             handle_http_channel()
           end
         rescue
-          # TODO: Proper error handling here.
+          # TODO(#24): Proper error handling here.
           wakeup_waiters()
         end
       end
@@ -52,7 +52,7 @@ module Issuesrc
       @http_channel.subscribe do |msg|
         method, url, opts, callback = msg
         req = EM::HttpRequest.new(url).send(method, opts)
-        # TODO: Err handling.
+        # TODO(#25): Err handling.
         req.callback do
           callback.call req
           done_request()
