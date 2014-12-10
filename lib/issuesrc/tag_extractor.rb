@@ -23,6 +23,13 @@ module Issuesrc
       end
     end
 
+    # Extracts a tag from a line of source code, if there is one.
+    #
+    # It passes the line through one or more extractor functions. The first
+    # that returns non-nil will be returned.
+    # 
+    # @param source A string.
+    # @return [Issuesrc::Tag] Or +nil+ if no tag is found.
     def extract(source)
       @extractors.each do |extr|
         tag_data = try_extractor(extr, source)
