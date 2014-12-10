@@ -77,7 +77,7 @@ module Issuesrc
       end
 
       def init_exclude(config)
-        @exclude = Issuesrc::Config::option_from_config(
+        @exclude = Issuesrc::Config.option_from_config(
           ['sourcer', 'exclude_files'], config)
         if @exclude.nil?
           @exclude = []
@@ -86,12 +86,12 @@ module Issuesrc
 
 
       def try_find_repo_url(args, config)
-        Issuesrc::Config::option_from_both(:repo_url, ['git', 'repo'],
+        Issuesrc::Config.option_from_both(:repo_url, ['git', 'repo'],
                                            args, config)
       end
 
       def try_find_repo_path(args, config)
-        Issuesrc::Config::option_from_both(:repo_path, ['git', 'repo_path'],
+        Issuesrc::Config.option_from_both(:repo_path, ['git', 'repo_path'],
                                            args, config)
       end
 
@@ -104,7 +104,7 @@ module Issuesrc
       end
 
       def decide_when_done(args_key, config_key, args, config)
-        opt = Issuesrc::Config::option_from_both(
+        opt = Issuesrc::Config.option_from_both(
           args_key, ['git', config_key], args, config)
         if opt.nil?
           opt = is_downloaded?

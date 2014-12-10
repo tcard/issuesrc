@@ -116,18 +116,18 @@ module Issuesrc
 
       private
       def find_repo(args, config)
-        repo_arg = Issuesrc::Config::option_from_both(
+        repo_arg = Issuesrc::Config.option_from_both(
           :repo, ['github', 'repo'], args, config, :require => true)
         repo_arg.split('/')
       end
 
       def try_find_token(args, config)
-        Issuesrc::Config::option_from_both(
+        Issuesrc::Config.option_from_both(
           :github_token, ['github', 'auth_token'], args, config)
       end
 
       def try_find_issuesrc_label(args, config)
-        label = Issuesrc::Config::option_from_both(
+        label = Issuesrc::Config.option_from_both(
           :issuesrc_label, ['issuer', 'issuesrc_label'], args, config)
         if label.nil?
           label = DEFAULT_LABEL

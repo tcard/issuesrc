@@ -17,7 +17,7 @@ module Issuesrc
 
       private
       def try_find_repo(args, config)
-        repo_arg = Issuesrc::Config::option_from_both(
+        repo_arg = Issuesrc::Config.option_from_both(
           :repo, ['github', 'repo'], args, config)
         repo_arg.split('/')
       end

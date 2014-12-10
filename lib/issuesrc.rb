@@ -43,7 +43,7 @@ module Issuesrc
     tags_by_issue_id = {}
 
     sourcer.retrieve_files().each do |file|
-      if Issuesrc::Config::option_from_args(:verbose, args)
+      if Issuesrc::Config.option_from_args(:verbose, args)
         puts file.path
       end
 
@@ -130,7 +130,7 @@ module Issuesrc
   end
 
   def load_component(config_key, arg_key, default, options)
-    type = Config::option_from_both(arg_key, config_key, @args, @config)
+    type = Config.option_from_both(arg_key, config_key, @args, @config)
     if type.nil?
       type = default
     end
@@ -139,7 +139,7 @@ module Issuesrc
 
   def load_component_by_type(type, options)
     if !options.include?(type)
-      exec_fail 'Unrecognized sourcer type: #{type}'
+      Issuesrc::exec_fail 'Unrecognized sourcer type: #{type}'
     end
 
     options[type]
@@ -148,7 +148,7 @@ module Issuesrc
   # Like `load_sourcer` but for the tag finders. It only looks at
   # `[tag_finders] tag_finders = [...]` from the config file.
   def load_tag_finders
-    tag_finders = Config::option_from_config(
+    tag_finders = Config.option_from_config(
       ['tag_finders', 'tag_finders'], @config)
     if tag_finders.nil?
       tag_finders = DEFAULT_TAG_FINDERS
@@ -157,7 +157,7 @@ module Issuesrc
   end
 
   def load_tag_finders_by_types(types)
-    tag_extractor = Issuesrc::TagExtractor.new(@args, @config)
+    tag_extractor = load_tag_extractor()
     tag_finders = []
     types.each do |type|
       path, cls = load_component_by_type(type, TAG_FINDERS)
@@ -165,6 +165,10 @@ module Issuesrc
       tag_finders << make_tag_finder(cls, tag_extractor)
     end
     tag_finders
+  end
+
+  def load_tag_extractor
+    Issuesrc::TagExtractor.new(@args, @config)
   end
 
   def make_tag_finder(cls, tag_extractor)
