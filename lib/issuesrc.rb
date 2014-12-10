@@ -66,7 +66,7 @@ module Issuesrc
       end
     end
 
-    # TODO(tcard): Test.
+    # TODO(tcard#28): Test.
 
     issuer.async_update_or_close_issues(issues, tags_by_issue_id) do
     |issue_id, tag, action|
